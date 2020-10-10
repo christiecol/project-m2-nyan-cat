@@ -17,7 +17,7 @@ class Enemy {
     // - We need the root DOM element so that we can remove the enemy when it is no longer needed. This will be done at a later time.
     // - We need to keep track of the enemy spot so that we don't place two enemies in the same spot.
     this.root = theRoot;
-    this.spot = enemySpot;
+    this.spot = enemySpot; /////look into this
 
     // The x position of the enemy is determined by its width and its spot. We need this information for the lifetime
     // of the instance, so we make it a property of the instance. (Why is this information needed for the lifetime of the instance?)
@@ -33,17 +33,17 @@ class Enemy {
     // We create a new DOM element. The tag of this DOM element is img. It is the DOM node that will display the enemy image
     // to the user. When the enemy is no longer needed, we will use a reference to this DOM node to remove it from the game. This
     // is why we create a property that refers to it.
-    this.domElement = document.createElement('img');
+    this.domElement = document.createElement("img");
 
     // We give it a src attribute to specify which image to display.
-    this.domElement.src = './images/enemy.png';
+    this.domElement.src = "images/jellyEnemy2.png";
     // We modify the CSS style of the DOM node.
-    this.domElement.style.position = 'absolute';
+    this.domElement.style.position = "absolute";
     this.domElement.style.left = `${this.x}px`;
     this.domElement.style.top = `${this.y}px`;
     this.domElement.style.zIndex = 5;
 
-    // Show that the user can actually see the img DOM node, we append it to the root DOM node.
+    // So that the user can actually see the img DOM node, we append it to the root DOM node.
     theRoot.appendChild(this.domElement);
     this.speed = Math.random() / 2 + 0.25;
   }
@@ -53,7 +53,7 @@ class Enemy {
   // this method will be called on the enemy instance every few milliseconds. The parameter
   // timeDiff refers to the number of milliseconds since the last update was called.
   update(timeDiff) {
-    // We update the y property of the instance in proportion of the amount of time
+    // We update the y property of the instance in proportion to the amount of time
     // since the last call to update. We also update the top css property so that the image
     // is updated on screen
     this.y = this.y + timeDiff * this.speed;
@@ -63,9 +63,12 @@ class Enemy {
     // of the screen and should be removed. We remove the DOM element from the root DOM element and we set
     // the destroyed property to indicate that the enemy should no longer be in play
     if (this.y > GAME_HEIGHT) {
-      this.root.removeChild(this.domElement);
-
-      this.destroyed = true;
+      this.destroy();
     }
+  }
+  destroy() {
+    this.root.removeChild(this.domElement);
+
+    this.destroyed = true;
   }
 }

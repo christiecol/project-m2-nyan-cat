@@ -1,4 +1,7 @@
 // This class is not used in the project yet.
+//not linked in html 
+// declare new text in engine
+// link it to the root 
 class Text {
   // The constructor has three parameters. Here is an example of how you would create
   // an instance of this class
@@ -8,8 +11,8 @@ class Text {
     const div = document.createElement('div');
 
     div.style.position = 'absolute';
-    div.style.left = xPos;
-    div.style.top = yPos;
+    div.style.left = xPos; //px
+    div.style.top = yPos; //px
     div.style.color = 'white';
     div.style.font = 'bold 30px Impact';
     div.style.zIndex = 2000;

@@ -16,6 +16,13 @@ class Engine {
     this.enemies = [];
     // We add the background image to the game
     addBackground(this.root);
+    //is player dead
+    this.isDead = false;
+
+    this.gameOver = new Text(this.root, 100, 100);
+
+    this.restartButton = document.getElementById("restartGame");
+    this.restartButton.addEventListener("click", this.restart);
   }
 
   // The gameLoop will run every few milliseconds. It does several things
@@ -50,14 +57,16 @@ class Engine {
     while (this.enemies.length < MAX_ENEMIES) {
       // We find the next available spot and, using this spot, we create an enemy.
       // We add this enemy to the enemies array
-      const spot = nextEnemySpot(this.enemies);
+      const spot = nextEnemySpot(this.enemies); //////continue creating enemies as each leaves the screen
       this.enemies.push(new Enemy(this.root, spot));
     }
 
     // We check if the player is dead. If he is, we alert the user
     // and return from the method (Why is the return statement important?)
     if (this.isPlayerDead()) {
-      window.alert('Game over');
+      this.lostGame();
+      document.removeEventListener("keydown", keydownHandler);
+
       return;
     }
 
@@ -68,6 +77,35 @@ class Engine {
   // This method is not implemented correctly, which is why
   // the burger never dies. In your exercises you will fix this method.
   isPlayerDead = () => {
-    return false;
+    this.enemies.forEach((enemy) => {
+      let enemyBottom = enemy.y + ENEMY_HEIGHT;
+      let enemySide = enemy.x;
+      let playerTop = GAME_HEIGHT - PLAYER_HEIGHT - 10;
+      let playerLeft = this.player.x;
+
+      if (playerLeft === enemySide && playerTop < enemyBottom) {
+        this.isDead = true;
+      }
+    });
+    return this.isDead;
+  };
+
+  lostGame = () => {
+    let message = GAME_OVER[Math.floor(Math.random() * GAME_OVER.length)];
+
+    this.gameOver.update(message);
+  };
+
+  restart = (event) => {
+    this.isDead = false;
+    this.gameOver.update("");
+    this.enemies.forEach((enemy) => {
+      enemy.destroy();
+      console.log(enemy);
+    });
+    this.enemies = [];
+
+    document.addEventListener("keydown", keydownHandler);
+    gameEngine.gameLoop();
   };
 }
