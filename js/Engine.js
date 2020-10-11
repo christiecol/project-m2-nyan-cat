@@ -14,14 +14,42 @@ class Engine {
     // Initially, we have no enemies in the game. The enemies property refers to an array
     // that contains instances of the Enemy class
     this.enemies = [];
+
+    //BONUS
+    this.bonuses = [];
+
+    //for score
+    this.scoreText = new Text(this.root, "15px", "15px");
+    this.score = 0;
+
     // We add the background image to the game
     addBackground(this.root);
     //is player dead
     this.isDead = false;
+    //is starfish caught
+    this.isCaught = false;
 
-    this.gameOver = new Text(this.root, 100, 100);
+    // for dysfuntional bonus
+    this.starfishTimeLeft = 0;
+    this.starfishTimer = null;
+
+    this.gameOver = new Text(this.root, 0, 0);
 
     this.restartButton = document.getElementById("restartGame");
+    this.restartButton.style.position = "absolute";
+    this.restartButton.style.color = "rgb(0, 26, 120)";
+    this.restartButton.style.fontWeight = "bold";
+    this.restartButton.style.textAlign = "center";
+    this.restartButton.style.left = "130px";
+    this.restartButton.style.top = "400px";
+    this.restartButton.style.fontFamily = "'Bungee Shade', cursive";
+    this.restartButton.style.fontSize = "2rem";
+    this.restartButton.style.border = "1px solid white";
+    this.restartButton.style.backgroundColor = "rgb(255, 255, 255, 0.6)";
+    this.restartButton.style.borderRadius = "5px";
+    this.restartButton.style.display = "none";
+    this.restartButton.style.zIndex = "2001";
+
     this.restartButton.addEventListener("click", this.restart);
   }
 
@@ -46,11 +74,22 @@ class Engine {
       enemy.update(timeDiff);
     });
 
+    //BONUS
+    this.bonuses.forEach((bonus) => {
+      bonus.update(timeDiff);
+    });
+    //
+
     // We remove all the destroyed enemies from the array referred to by \`this.enemies\`.
     // We use filter to accomplish this.
     // Remember: this.enemies only contains instances of the Enemy class.
     this.enemies = this.enemies.filter((enemy) => {
       return !enemy.destroyed;
+    });
+
+    //BONUS
+    this.bonuses = this.bonuses.filter((bonus) => {
+      return !bonus.destroyed;
     });
 
     // We need to perform the addition of enemies until we have enough enemies.
@@ -61,14 +100,44 @@ class Engine {
       this.enemies.push(new Enemy(this.root, spot));
     }
 
+    //BONUS
+    while (this.bonuses.length < MAX_BONUS) {
+      const spot = nextBonusSpot(this.bonuses);
+      this.bonuses.push(new Bonus(this.root, spot));
+    }
+
     // We check if the player is dead. If he is, we alert the user
     // and return from the method (Why is the return statement important?)
     if (this.isPlayerDead()) {
+      this.restartButton.style.display = "block";
       this.lostGame();
       document.removeEventListener("keydown", keydownHandler);
 
       return;
     }
+    /////////////////////////////////////////////////////
+    // BONUS SECTION THAT IS NOT WORKING
+    /////////////////////////////////////////////////////
+    // this.starfishTimer = setInterval(() => {
+    //   if (this.starfishTimer <= 0) {
+    //     clearInterval(this.starfishTimer);
+    //   } else {
+    //     this.enemies.forEach((enemy) => {
+    //       enemy.speed = Math.random() / 2.5;
+    //     });
+    //     this.starfishTimer -= 20;
+    //   }
+    // }, 20);
+    /////////////////////////////////////////////////////
+    if (this.isStarfishCaught()) {
+      // this.bonuses.destroyed = true;
+    }
+
+    this.scoreText.update(`${Math.round(this.score)}`);
+    // this.bonuses.forEach((bonus) => {
+    //   this.bonuses.destroyed = true;
+    //   this.root.removeChild(this.bonuses);
+    // });
 
     // If the player is not dead, then we put a setTimeout to run the gameLoop in 20 milliseconds
     setTimeout(this.gameLoop, 20);
@@ -90,15 +159,36 @@ class Engine {
     return this.isDead;
   };
 
+  //BONUS
+  isStarfishCaught = () => {
+    this.bonuses.forEach((bonus) => {
+      let bonusBottom = bonus.y + BONUS_HEIGHT;
+      let bonusSide = bonus.x;
+      let playerTop = GAME_HEIGHT - PLAYER_HEIGHT - 10;
+      let playerLeft = this.player.x;
+
+      if (playerLeft === bonusSide && playerTop < bonusBottom) {
+        this.isCaught = true;
+        // this.starfishTimeLeft = 5000;
+        // this.root.bonuses.removeChild(this.bonuses);
+      }
+    });
+    this.score += 1;
+    return this.isCaught;
+  };
+
   lostGame = () => {
     let message = GAME_OVER[Math.floor(Math.random() * GAME_OVER.length)];
 
-    this.gameOver.update(message);
+    this.gameOver.gameOverText(message);
   };
 
   restart = (event) => {
     this.isDead = false;
-    this.gameOver.update("");
+    this.gameOver.gameOverText("");
+    this.gameOver.domElement.style.backgroundColor = "transparent";
+    this.restartButton.style.display = "none";
+    this.player.x;
     this.enemies.forEach((enemy) => {
       enemy.destroy();
       console.log(enemy);

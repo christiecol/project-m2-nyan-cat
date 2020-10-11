@@ -47,7 +47,7 @@ class Enemy {
     theRoot.appendChild(this.domElement);
     this.speed = Math.random() / 2 + 0.25;
   }
-
+  //
   // We set the speed property of the enemy. This determines how fast it moves down the screen.
   // To make sure that every enemy has a different speed, we use Math.random()
   // this method will be called on the enemy instance every few milliseconds. The parameter

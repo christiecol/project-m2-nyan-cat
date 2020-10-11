@@ -18,13 +18,16 @@ const MAX_ENEMIES = 4;
 const PLAYER_WIDTH = 75;
 const PLAYER_HEIGHT = 54;
 
+const BONUS_WIDTH = 75;
+const BONUS_HEIGHT = 90;
+const MAX_BONUS = 1;
 //const PLAYER_HEALTH = 3;
 
 // Game over
 const GAME_OVER = [
-  "You've been trouten down by your nemo-sis!",
-  "You're sunk!",
-  "You're a fish out of water.",
-  "You got schooled.",
-  "You have cod to focus!",
+  "YOU'VE BEEN TROUTEN DOWN!",
+  "YOU'VE BEEN SUNK BY YOUR NEMO-SIS!",
+  "YOU'RE A FISH OUT OF WATER.",
+  "YOU GOT SCHOOLED, COOL FISH.",
+  "YOU HAVE COD TO FOCUS!",
 ];

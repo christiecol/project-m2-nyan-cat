@@ -23,19 +23,30 @@ const keydownHandler = (event) => {
   //   gameEngine.player.moveUp();
   // }
 };
+
 let startButton = document.getElementById("startGame");
-startButton.style.color = "blue";
-startButton.style.psoition = "absolute";
+
+startButton.style.fontFamily = "'Bungee Shade', cursive";
+startButton.style.color = "rgb(0, 26, 120)";
+startButton.style.position = "absolute";
+startButton.style.left = `${GAME_WIDTH / 7}`;
+startButton.style.top = `${GAME_HEIGHT / 2}`;
+startButton.style.fontSize = "3rem";
+startButton.style.fontWeight = "bold";
+startButton.style.border = "2px solid white";
+startButton.style.borderRadius = "10px";
+startButton.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+startButton.style.padding = "10px 60px";
+
+startButton.style.transform = "translatex(-50%)";
+startButton.style.transform = "translatey(-50%)";
 
 let startGame = (event) => {
   gameEngine.gameLoop();
+  document.addEventListener("keydown", keydownHandler);
+
   startButton.removeEventListener("click", startGame);
   startButton.style.display = "none";
 };
 
 startButton.addEventListener("click", startGame);
-document.addEventListener("keydown", keydownHandler);
-
-// We add an event listener to document. document the ancestor of all DOM nodes in the DOM.
-
-// We call the gameLoop method to start the game
