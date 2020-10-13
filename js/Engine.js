@@ -205,6 +205,7 @@ class Engine {
     });
     this.enemies = [];
 
+    this.score;
     document.addEventListener("keydown", keydownHandler);
     gameEngine.gameLoop();
   };
