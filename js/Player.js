@@ -25,6 +25,11 @@ class Player {
     root.appendChild(this.domElement);
   }
 
+  restartPosition() {
+    this.x = 3 * PLAYER_WIDTH;
+    this.domElement.style.left = `${this.x}px`;
+  }
+
   // This method will be called when the user presses the left key. See in main.js
   // how we relate the key presses to this method
   moveLeft() {

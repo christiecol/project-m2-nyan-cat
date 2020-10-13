@@ -22,16 +22,13 @@ class Engine {
     this.scoreText = new Text(this.root, "15px", "15px");
     this.score = 0;
 
+    this.isTimeout = false;
     // We add the background image to the game
     addBackground(this.root);
     //is player dead
     this.isDead = false;
     //is starfish caught
     this.isCaught = false;
-
-    // for dysfuntional bonus
-    this.starfishTimeLeft = 0;
-    this.starfishTimer = null;
 
     this.gameOver = new Text(this.root, 0, 0);
 
@@ -118,17 +115,8 @@ class Engine {
     /////////////////////////////////////////////////////
     // BONUS SECTION THAT IS NOT WORKING
     /////////////////////////////////////////////////////
-    // this.starfishTimer = setInterval(() => {
-    //   if (this.starfishTimer <= 0) {
-    //     clearInterval(this.starfishTimer);
-    //   } else {
-    //     this.enemies.forEach((enemy) => {
-    //       enemy.speed = Math.random() / 2.5;
-    //     });
-    //     this.starfishTimer -= 20;
-    //   }
-    // }, 20);
     /////////////////////////////////////////////////////
+
     if (this.isStarfishCaught()) {
       // this.bonuses.destroyed = true;
     }
@@ -167,13 +155,33 @@ class Engine {
       let playerTop = GAME_HEIGHT - PLAYER_HEIGHT - 10;
       let playerLeft = this.player.x;
 
-      if (playerLeft === bonusSide && playerTop < bonusBottom) {
+      if (
+        playerLeft === bonusSide &&
+        playerTop < bonusBottom &&
+        !this.isTimeout
+      ) {
         this.isCaught = true;
+        this.isTimeout = true;
+        this.score += 10;
+
+        setTimeout(() => {
+          this.isTimeout = false;
+        }, 500);
+
+        this.enemies.forEach((enemy) => {
+          enemy.speed = enemy.speed / 2;
+        });
+
+        setTimeout(() => {
+          this.enemies.forEach((enemy) => {
+            enemy.speed = enemy.speed * 2;
+          });
+        }, 3000);
+
         // this.starfishTimeLeft = 5000;
         // this.root.bonuses.removeChild(this.bonuses);
       }
     });
-    this.score += 1;
     return this.isCaught;
   };
 
@@ -188,7 +196,9 @@ class Engine {
     this.gameOver.gameOverText("");
     this.gameOver.domElement.style.backgroundColor = "transparent";
     this.restartButton.style.display = "none";
-    this.player.x;
+
+    this.player.restartPosition();
+
     this.enemies.forEach((enemy) => {
       enemy.destroy();
       console.log(enemy);
